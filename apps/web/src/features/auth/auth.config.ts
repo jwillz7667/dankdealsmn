@@ -8,15 +8,21 @@ import { DEFAULT_ROLE, isUserRole } from './roles';
 // Edge-safe base config: providers, pages, and callbacks only — no database
 // adapter (Prisma can't run on the edge). The full instance in `nextauth.ts`
 // composes this with the adapter; `middleware.ts` consumes it directly.
-const providers: NextAuthConfig['providers'] = [
-  Google({
-    clientId: serverEnv.GOOGLE_CLIENT_ID,
-    clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
-    // Both Google and the magic link verify ownership of the same email, so
-    // linking them to one account is safe and avoids OAuthAccountNotLinked.
-    allowDangerousEmailAccountLinking: true,
-  }),
-];
+const providers: NextAuthConfig['providers'] = [];
+
+// Google is disabled until the Google Cloud consent screen is configured;
+// register it only when both credentials are present.
+if (serverEnv.GOOGLE_CLIENT_ID && serverEnv.GOOGLE_CLIENT_SECRET) {
+  providers.push(
+    Google({
+      clientId: serverEnv.GOOGLE_CLIENT_ID,
+      clientSecret: serverEnv.GOOGLE_CLIENT_SECRET,
+      // Both Google and the magic link verify ownership of the same email, so
+      // linking them to one account is safe and avoids OAuthAccountNotLinked.
+      allowDangerousEmailAccountLinking: true,
+    }),
+  );
+}
 
 if (serverEnv.RESEND_API_KEY) {
   providers.push(

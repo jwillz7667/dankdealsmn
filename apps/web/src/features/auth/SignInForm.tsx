@@ -13,6 +13,8 @@ const ERROR_MESSAGES: Record<string, string> = {
 
 interface SignInFormProps {
   callbackUrl: string;
+  /** Whether the Google OAuth provider is configured. */
+  googleEnabled: boolean;
   /** Whether the magic-link (email) provider is configured. */
   emailEnabled: boolean;
   error?: string;
@@ -38,11 +40,14 @@ function GoogleGlyph() {
   );
 }
 
-export function SignInForm({ callbackUrl, emailEnabled, error }: SignInFormProps) {
+export function SignInForm({ callbackUrl, googleEnabled, emailEnabled, error }: SignInFormProps) {
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState<'google' | 'email' | null>(null);
 
   const errorText = error ? (ERROR_MESSAGES[error] ?? 'Something went wrong. Please try again.') : null;
+  // The "or" divider only makes sense when both methods are offered.
+  const showDivider = googleEnabled && emailEnabled;
+  const noProviders = !googleEnabled && !emailEnabled;
 
   function handleGoogle() {
     setBusy('google');
@@ -68,17 +73,27 @@ export function SignInForm({ callbackUrl, emailEnabled, error }: SignInFormProps
         </div>
       )}
 
-      <button type="button" className="btn btn--block btn--google" onClick={handleGoogle} disabled={busy !== null}>
-        {busy === 'google' ? <Loader2 className="ic spin" aria-hidden /> : <GoogleGlyph />}
-        Continue with Google
-      </button>
+      {noProviders && (
+        <div className="infonote infonote--warn" role="alert" style={{ marginTop: 4 }}>
+          <span>Sign-in is temporarily unavailable. Please check back soon.</span>
+        </div>
+      )}
+
+      {googleEnabled && (
+        <button type="button" className="btn btn--block btn--google" onClick={handleGoogle} disabled={busy !== null}>
+          {busy === 'google' ? <Loader2 className="ic spin" aria-hidden /> : <GoogleGlyph />}
+          Continue with Google
+        </button>
+      )}
+
+      {showDivider && (
+        <div className="or">
+          <span>or</span>
+        </div>
+      )}
 
       {emailEnabled && (
         <>
-          <div className="or">
-            <span>or</span>
-          </div>
-
           <form onSubmit={handleEmail} className="stack gap-8" noValidate>
             <label className="authlabel" htmlFor="email">
               Email address

@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import { SignInForm } from '@/features/auth';
 import { auth } from '@/features/auth/server';
-import { isEmailAuthEnabled } from '@/lib/env';
+import { isEmailAuthEnabled, isGoogleAuthEnabled } from '@/lib/env';
 
 export const metadata: Metadata = {
   title: 'Sign in',
@@ -34,7 +34,12 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
   return (
     <div className="authwrap">
-      <SignInForm callbackUrl={target} emailEnabled={isEmailAuthEnabled} error={error} />
+      <SignInForm
+        callbackUrl={target}
+        googleEnabled={isGoogleAuthEnabled}
+        emailEnabled={isEmailAuthEnabled}
+        error={error}
+      />
     </div>
   );
 }

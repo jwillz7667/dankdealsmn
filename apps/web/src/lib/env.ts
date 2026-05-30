@@ -13,9 +13,11 @@ const ServerEnvSchema = z.object({
   AUTH_SECRET: z.string().min(1, 'AUTH_SECRET is required'),
   // Reserved for sharing the session cookie across subdomains in production.
   AUTH_COOKIE_DOMAIN: z.string().optional(),
-  // Google OAuth credentials.
-  GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),
-  GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
+  // Google OAuth credentials. Optional: when either is absent the Google
+  // provider is not registered (disabled until the Google Cloud consent screen
+  // is configured). Magic-link email then carries sign-in on its own.
+  GOOGLE_CLIENT_ID: z.string().min(1).optional(),
+  GOOGLE_CLIENT_SECRET: z.string().min(1).optional(),
   // Resend (magic-link email). Optional: when absent, only OAuth is offered.
   RESEND_API_KEY: z.string().min(1).optional(),
   EMAIL_FROM: z.string().min(1).default('DankDeals <orders@dankdealsmn.com>'),
@@ -43,3 +45,8 @@ export const serverEnv: ServerEnv = load();
 
 /** Magic-link email is only available when Resend is configured. */
 export const isEmailAuthEnabled: boolean = Boolean(serverEnv.RESEND_API_KEY);
+
+/** Google OAuth is only offered when both credentials are present. */
+export const isGoogleAuthEnabled: boolean = Boolean(
+  serverEnv.GOOGLE_CLIENT_ID && serverEnv.GOOGLE_CLIENT_SECRET,
+);
