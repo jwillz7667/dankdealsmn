@@ -26,7 +26,7 @@ wrangler whoami                         # confirm the account + email
 > OAuth login does not grant; create that separately under *My Profile → API Tokens*.
 
 ```bash
-export CF_BUCKET="dankdeals-media"            # matches R2_BUCKET in the API config
+export CF_BUCKET="dankdealsmn"                 # matches R2_BUCKET in the API config
 export CF_ZONE="dankdealsmn.com"
 export CF_MEDIA_HOST="media.dankdealsmn.com"
 ```
@@ -72,7 +72,7 @@ This is a dashboard action — wrangler does not mint S3 tokens. Capture:
 | Account ID             | `R2_ACCOUNT_ID`          |
 | Access Key ID          | `R2_ACCESS_KEY_ID`       |
 | Secret Access Key      | `R2_SECRET_ACCESS_KEY`   |
-| `dankdeals-media`      | `R2_BUCKET`              |
+| `dankdealsmn`          | `R2_BUCKET`              |
 | `https://media.dankdealsmn.com` | `R2_PUBLIC_BASE_URL` |
 
 Set these on Railway (API) — see `infra/cloudflare/../../railway.json` and the deploy notes.
