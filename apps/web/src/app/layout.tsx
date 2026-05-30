@@ -51,8 +51,8 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },
   },
-  // Favicon (app/icon.svg) and Apple touch icon (app/apple-icon.tsx) are wired
-  // automatically via file conventions; the social card comes from app/opengraph-image.tsx.
+  // Favicon (app/favicon.ico + app/icon.png) and Apple touch icon (app/apple-icon.png) are
+  // wired automatically via file conventions; the social card comes from app/opengraph-image.tsx.
 };
 
 export const viewport: Viewport = {
