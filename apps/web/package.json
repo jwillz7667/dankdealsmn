@@ -1,0 +1,39 @@
+{
+  "name": "@dankdeals/web",
+  "version": "0.1.0",
+  "private": true,
+  "license": "UNLICENSED",
+  "type": "module",
+  "scripts": {
+    "dev": "next dev -p 3000",
+    "build": "next build",
+    "start": "next start -p 3000",
+    "lint": "eslint .",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@auth/prisma-adapter": "^2.7.4",
+    "@dankdeals/db": "workspace:*",
+    "clsx": "^2.1.1",
+    "jose": "^5.9.6",
+    "lucide-react": "^0.469.0",
+    "next": "^15.1.6",
+    "next-auth": "5.0.0-beta.25",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@dankdeals/config": "workspace:*",
+    "@next/eslint-plugin-next": "^15.1.6",
+    "@types/node": "^22.7.4",
+    "@types/react": "^19.0.7",
+    "@types/react-dom": "^19.0.3",
+    "eslint": "^9.11.1",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-react-hooks": "^5.1.0",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.8.0"
+  }
+}

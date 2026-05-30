@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Shop — DankDeals</title>
+<link rel="icon" href="assets/car-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .shop-head { background: var(--surface); border-bottom: 1.5px solid var(--line); }
+  .shop-head__in { padding-block: 22px; }
+  .shop-head h1 { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .crumb { font-size: .82rem; color: var(--muted); margin-bottom: 8px; display: flex; gap: 6px; align-items: center; }
+  .crumb a:hover { color: var(--green-700); }
+
+  .catrow { display: flex; gap: 8px; overflow-x: auto; padding: 14px 0 4px; margin-inline: -18px; padding-inline: 18px; scrollbar-width: none; }
+  .catrow::-webkit-scrollbar { display: none; }
+  .catrow .chip { flex-shrink: 0; }
+
+  .shop-grid { display: grid; grid-template-columns: 1fr; gap: 0; align-items: start; }
+  .filters { display: none; }
+  .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 0; position: sticky; top: var(--header-h); background: rgba(255,255,255,.94); backdrop-filter: blur(8px); z-index: 20; }
+  .toolbar .count { font-size: .9rem; color: var(--muted); font-weight: 600; }
+  .toolbar .sort { display: flex; align-items: center; gap: 8px; }
+  .toolbar .sort .select { min-width: 150px; padding: 9px 34px 9px 12px; }
+  .filter-btn { display: inline-flex; }
+
+  .applied { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .applied .chip { background: var(--green-50); border-color: var(--green-200); color: var(--green-700); }
+  .applied .chip button { background: none; border: none; color: inherit; display: inline-flex; padding: 0; }
+  .applied .chip button svg { width: 14px; height: 14px; }
+
+  /* filter sheet (mobile) */
+  .sheet { position: fixed; inset: 0; z-index: 220; visibility: hidden; }
+  .sheet.open { visibility: visible; }
+  .sheet__scrim { position: absolute; inset: 0; background: rgba(12,15,11,.45); opacity: 0; transition: .25s; }
+  .sheet.open .sheet__scrim { opacity: 1; }
+  .sheet__panel { position: absolute; left: 0; right: 0; bottom: 0; max-height: 86vh; background: #fff; border-radius: 22px 22px 0 0; transform: translateY(100%); transition: transform .3s var(--ease); display: flex; flex-direction: column; }
+  .sheet.open .sheet__panel { transform: none; }
+  .sheet__body { overflow-y: auto; padding: 4px 20px 12px; }
+  .sheet__foot { padding: 14px 20px calc(14px + env(safe-area-inset-bottom)); border-top: 1.5px solid var(--line); display: flex; gap: 10px; }
+
+  .fgroup { padding: 18px 0; border-bottom: 1.5px solid var(--line); }
+  .fgroup:last-child { border-bottom: none; }
+  .fgroup h4 { font-family: var(--font-display); font-size: 1rem; margin-bottom: 12px; }
+  .fopts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .fcheck { display: flex; align-items: center; gap: 10px; padding: 7px 0; cursor: pointer; font-size: .95rem; }
+  .fcheck input { width: 20px; height: 20px; accent-color: var(--green); }
+  .price-range { display: flex; align-items: center; gap: 10px; }
+  .price-range input[type=range] { flex: 1; accent-color: var(--green); }
+
+  .empty-grid { grid-column: 1/-1; }
+
+  @media (min-width: 860px) {
+    .shop-grid { grid-template-columns: 250px 1fr; gap: 32px; }
+    .filters { display: block; position: sticky; top: calc(var(--header-h) + 12px); align-self: start; }
+    .filter-btn { display: none !important; }
+    .toolbar { padding-top: 0; }
+  }
+</style>
+</head>
+<body data-page="shop">
+
+<section class="shop-head">
+  <div class="wrap shop-head__in">
+    <div class="crumb"><a href="index.html">Home</a> / <span id="crumbCat">Shop all</span></div>
+    <h1 id="shopTitle">Shop all products</h1>
+    <p class="muted" id="shopSub" style="margin-top:4px">Lab-tested cannabis, delivered across the Twin Cities.</p>
+    <div class="catrow" id="catRow"></div>
+  </div>
+</section>
+
+<div class="wrap section" style="padding-top:0">
+  <div class="shop-grid">
+    <!-- desktop filters -->
+    <aside class="filters" id="filtersDesktop"></aside>
+
+    <div>
+      <div class="toolbar">
+        <span class="count" id="resultCount">—</span>
+        <div class="row gap-12">
+          <button class="btn btn--ghost btn--sm filter-btn" data-open-filters><span class="ic" data-ic="filter"></span> Filters</button>
+          <div class="sort">
+            <select class="select" id="sortSelect" aria-label="Sort">
+              <option value="featured">Featured</option>
+              <option value="price-asc">Price: Low to High</option>
+              <option value="price-desc">Price: High to Low</option>
+              <option value="rating">Top rated</option>
+              <option value="thc">Highest THC</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="applied" id="applied"></div>
+      <div class="pgrid pgrid--shop" id="shopGrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Mobile filter sheet -->
+<div class="sheet" id="filterSheet">
+  <div class="sheet__scrim" data-close-filters></div>
+  <div class="sheet__panel">
+    <div class="drawer__head"><h3>Filters</h3><button class="icon-btn" data-close-filters><span class="ic" data-ic="x"></span></button></div>
+    <div class="sheet__body" id="filtersMobile"></div>
+    <div class="sheet__foot">
+      <button class="btn btn--ghost grow" id="clearFiltersM">Clear all</button>
+      <button class="btn grow" data-close-filters>Show results</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/image-slot.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/shop.js"></script>
+</body>
+</html>

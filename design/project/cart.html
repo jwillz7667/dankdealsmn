@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Your Cart — DankDeals</title>
+<link rel="icon" href="assets/car-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .cart-wrap { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
+  .cart-line { display: grid; grid-template-columns: 84px 1fr; gap: 16px; padding: 18px 0; border-bottom: 1.5px solid var(--line); }
+  .cart-line__media { width: 84px; height: 84px; border-radius: 14px; overflow: hidden; background: var(--surface); }
+  .cart-line__media image-slot { width: 100%; height: 100%; }
+  .cart-line__name { font-family: var(--font-display); font-weight: 700; font-size: 1.08rem; }
+  .cart-line__brand { font-size: .76rem; text-transform: uppercase; letter-spacing: .04em; color: var(--muted); font-weight: 700; }
+  .cart-line__foot { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; }
+  .summary { border: 1.5px solid var(--line); border-radius: var(--r-lg); padding: 22px; background: #fff; }
+  .summary h3 { font-size: 1.25rem; margin-bottom: 16px; }
+  .promo { display: flex; gap: 8px; margin: 16px 0; }
+  .promo input { flex: 1; }
+  .progress { height: 8px; border-radius: 99px; background: var(--surface-2); overflow: hidden; margin: 6px 0 14px; }
+  .progress i { display: block; height: 100%; background: var(--green); border-radius: 99px; transition: width .4s var(--ease); }
+  @media (min-width: 860px) {
+    .cart-wrap { grid-template-columns: 1fr 360px; gap: 40px; }
+    .summary { position: sticky; top: calc(var(--header-h) + 16px); }
+  }
+</style>
+</head>
+<body data-page="cart">
+
+<section class="shop-head" style="background:var(--surface);border-bottom:1.5px solid var(--line)">
+  <div class="wrap" style="padding-block:22px">
+    <div class="crumb" style="font-size:.82rem;color:var(--muted);margin-bottom:8px"><a href="index.html">Home</a> / <span>Cart</span></div>
+    <h1 style="font-size:clamp(1.8rem,7vw,2.6rem)">Your cart</h1>
+  </div>
+</section>
+
+<main class="wrap section" style="padding-top:24px">
+  <div id="cartRoot"></div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/image-slot.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/cart.js"></script>
+</body>
+</html>

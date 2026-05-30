@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>DankDeals — Cannabis Delivered in the Twin Cities</title>
+<link rel="icon" href="assets/car-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  /* ----- Home-specific ----- */
+  .hero { background: linear-gradient(180deg, var(--green-50), #fff 75%); overflow: hidden; }
+  .hero__in { display: flex; flex-direction: column; gap: 28px; padding-top: 30px; padding-bottom: 8px; }
+  .hero h1 { font-size: clamp(2.5rem, 11vw, 4.6rem); font-weight: 900; line-height: .96; letter-spacing: -.03em; }
+  .hero h1 em { color: var(--green); font-style: normal; }
+  .hero p.lead { font-size: clamp(1.05rem, 4vw, 1.3rem); color: var(--ink-2); max-width: 30ch; }
+  .hero__cta { display: flex; flex-wrap: wrap; gap: 12px; }
+  .hero__stats { display: flex; gap: 22px; flex-wrap: wrap; margin-top: 4px; }
+  .hero__stats div { display: flex; flex-direction: column; }
+  .hero__stats b { font-family: var(--font-display); font-size: 1.5rem; font-weight: 800; letter-spacing: -.02em; }
+  .hero__stats span { font-size: .82rem; color: var(--muted); }
+  .hero__visual { position: relative; }
+  .hero__visual image-slot { width: 100%; aspect-ratio: 4/3; }
+  .hero__float { position: absolute; bottom: 14px; left: 14px; background: #fff; border-radius: var(--pill); box-shadow: var(--sh-lg); padding: 8px 16px 8px 8px; display: flex; align-items: center; gap: 10px; }
+  .hero__float .dot { width: 38px; height: 38px; border-radius: 50%; background: var(--green); display: grid; place-items: center; color: #fff; }
+  .hero__float .dot svg { width: 22px; height: 22px; }
+  .hero__float b { font-family: var(--font-display); display: block; font-size: .95rem; line-height: 1.1; }
+  .hero__float span { font-size: .76rem; color: var(--muted); }
+
+  /* category grid */
+  .cats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .catcard { display: flex; flex-direction: column; gap: 8px; padding: 18px 16px; border: 1.5px solid var(--line); border-radius: var(--r-lg); background: #fff; transition: .2s var(--ease); }
+  .catcard:hover { border-color: var(--green); transform: translateY(-3px); box-shadow: var(--sh); }
+  .catcard .ico { width: 46px; height: 46px; border-radius: 13px; background: var(--green-50); color: var(--green-700); display: grid; place-items: center; }
+  .catcard .ico svg { width: 26px; height: 26px; }
+  .catcard b { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
+  .catcard span { font-size: .82rem; color: var(--muted); }
+  .catcard .go { margin-top: auto; color: var(--green-700); font-weight: 700; font-size: .85rem; display: inline-flex; align-items: center; gap: 4px; }
+
+  /* steps */
+  .steps { display: grid; gap: 16px; }
+  .step { display: flex; gap: 16px; align-items: flex-start; padding: 22px; background: #fff; border: 1.5px solid var(--line); border-radius: var(--r-lg); }
+  .step__n { flex-shrink: 0; width: 52px; height: 52px; border-radius: 50%; background: var(--ink); color: #fff; font-family: var(--font-display); font-weight: 800; font-size: 1.3rem; display: grid; place-items: center; position: relative; }
+  .step__n .ic { position: absolute; bottom: -6px; right: -6px; width: 26px; height: 26px; border-radius: 50%; background: var(--green); display: grid; place-items: center; border: 2px solid #fff; }
+  .step__n .ic svg { width: 15px; height: 15px; color: #fff; }
+  .step h3 { font-size: 1.2rem; margin-bottom: 4px; }
+  .step p { color: var(--muted); font-size: .94rem; }
+
+  /* deals banner */
+  .dealbar { background: var(--ink); color: #fff; border-radius: var(--r-xl); padding: 28px 22px; display: flex; flex-direction: column; gap: 16px; position: relative; overflow: hidden; }
+  .dealbar h2 { font-size: clamp(1.8rem, 7vw, 2.6rem); }
+  .dealbar h2 em { color: var(--green-200); font-style: normal; }
+  .dealbar .car { position: absolute; right: -30px; bottom: -20px; height: 150px; opacity: .12; }
+
+  /* trust */
+  .trust { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+  .trust__item { padding: 20px; border-radius: var(--r-lg); background: var(--surface); border: 1.5px solid var(--line); }
+  .trust__item .ic { width: 40px; height: 40px; border-radius: 11px; background: #fff; color: var(--green); display: grid; place-items: center; margin-bottom: 12px; box-shadow: var(--sh-sm); }
+  .trust__item .ic svg { width: 24px; height: 24px; }
+  .trust__item b { font-family: var(--font-display); font-weight: 700; display: block; margin-bottom: 4px; font-size: 1.02rem; }
+  .trust__item span { color: var(--muted); font-size: .88rem; }
+
+  /* area */
+  .area { background: var(--ink); color: #fff; border-radius: var(--r-xl); padding: 30px 22px; }
+  .area h2 { font-size: clamp(1.7rem, 6vw, 2.4rem); margin-bottom: 8px; }
+  .area__zones { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; }
+  .area__zones span { background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.16); border-radius: var(--pill); padding: 7px 14px; font-size: .88rem; font-weight: 500; }
+  .area__zones span.on { background: var(--green); border-color: var(--green); }
+
+  /* newsletter */
+  .news { background: var(--green-50); border: 1.5px solid var(--green-100); border-radius: var(--r-xl); padding: 30px 22px; text-align: center; }
+  .news h2 { font-size: clamp(1.5rem, 6vw, 2.2rem); margin-bottom: 6px; }
+  .news form { display: flex; flex-direction: column; gap: 10px; max-width: 420px; margin: 18px auto 0; }
+
+  @media (min-width: 760px) {
+    .hero__in { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 40px; padding-top: 56px; padding-bottom: 40px; }
+    .cats { grid-template-columns: repeat(4, 1fr); }
+    .steps { grid-template-columns: repeat(3, 1fr); }
+    .step { flex-direction: column; }
+    .dealbar { flex-direction: row; align-items: center; justify-content: space-between; padding: 40px 44px; }
+    .dealbar > div:first-child { max-width: 60%; }
+    .trust { grid-template-columns: repeat(4, 1fr); }
+    .news form { flex-direction: row; }
+  }
+</style>
+</head>
+<body data-page="home">
+
+<main>
+  <!-- Hero -->
+  <section class="hero">
+    <div class="wrap hero__in">
+      <div class="stack gap-16">
+        <span class="badge badge--soft" style="align-self:flex-start;padding:7px 13px">⚡ Same-day delivery · 60–90 min</span>
+        <h1>Cannabis,<br><em>delivered.</em></h1>
+        <p class="lead">Premium, lab-tested flower, edibles, vapes &amp; more — brought to your door across the Twin Cities &amp; metro.</p>
+        <div class="hero__cta">
+          <a class="btn btn--lg" href="shop.html">Shop products<span class="ic" data-ic="arrowR"></span></a>
+          <a class="btn btn--ghost btn--lg" href="#how">How it works</a>
+        </div>
+        <div class="hero__stats">
+          <div><b>14+</b><span>Metro cities</span></div>
+          <div><b>60–90<small style="font-size:.7rem"> min</small></b><span>Avg. delivery</span></div>
+          <div><b>100%</b><span>Lab-tested</span></div>
+        </div>
+      </div>
+      <div class="hero__visual">
+        <image-slot id="hero" shape="rounded" radius="24" placeholder="Drop a hero / lifestyle photo"></image-slot>
+        <div class="hero__float">
+          <span class="dot" id="heroCar"></span>
+          <span><b>On the way</b><span>Arriving in 72 min</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Categories -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Browse</span><h2>Shop by category</h2></div>
+        <a class="link" href="shop.html">View all →</a>
+      </div>
+      <div class="cats" id="catGrid"></div>
+    </div>
+  </section>
+
+  <!-- Best sellers -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="eyebrow">Crowd favorites</span><h2>Best sellers</h2></div>
+        <a class="link" href="shop.html">Shop all →</a>
+      </div>
+      <div class="rail" id="bestRail"></div>
+    </div>
+  </section>
+
+  <!-- Deals -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="dealbar">
+        <img src="assets/car-icon.png" class="car" alt="">
+        <div>
+          <span class="eyebrow" style="color:var(--green-200)">Today only</span>
+          <h2 style="margin:6px 0 8px">Fresh <em>deals</em>, dropped daily.</h2>
+          <p style="color:#aab4a3;max-width:46ch">Save on staff-picked flower, carts and edibles — restocked every morning. Use code <b style="color:#fff">DANK15</b> for 15% off your first order.</p>
+        </div>
+        <a class="btn btn--lg" href="shop.html?deal=1">See all deals</a>
+      </div>
+      <div class="rail" id="dealRail" style="margin-top:18px"></div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section class="section" id="how" style="background:var(--surface);scroll-margin-top:80px">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="eyebrow">Easy as it gets</span><h2>How it works</h2></div></div>
+      <div class="steps" id="steps"></div>
+    </div>
+  </section>
+
+  <!-- Trust -->
+  <section class="section">
+    <div class="wrap">
+      <div class="sec-head"><div><span class="eyebrow">Why DankDeals</span><h2>Delivery done right</h2></div></div>
+      <div class="trust" id="trust"></div>
+    </div>
+  </section>
+
+  <!-- Delivery area -->
+  <section class="section" id="area" style="padding-top:0;scroll-margin-top:80px">
+    <div class="wrap">
+      <div class="area">
+        <span class="eyebrow" style="color:var(--green-200)">Now serving</span>
+        <h2>Delivering across the Twin Cities &amp; metro</h2>
+        <p style="color:#aab4a3;max-width:50ch">Enter your address at checkout to confirm coverage. We deliver 10am–10pm, seven days a week — rain, shine or snow.</p>
+        <div class="area__zones" id="zones"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Newsletter -->
+  <section class="section" style="padding-top:0">
+    <div class="wrap">
+      <div class="news">
+        <span class="eyebrow">Stay lit on deals</span>
+        <h2>Get drops in your inbox</h2>
+        <p class="muted">New strains, weekly deals and delivery perks. No spam, just DankDeals.</p>
+        <form onsubmit="DD.toast('Subscribed! Check your inbox 📬');return false;">
+          <input class="input" type="email" placeholder="you@email.com" required>
+          <button class="btn" type="submit">Subscribe</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/image-slot.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/home.js"></script>
+</body>
+</html>

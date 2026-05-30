@@ -1,0 +1,46 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+.next/
+out/
+build/
+*.tsbuildinfo
+
+# Turbo
+.turbo/
+
+# Env / secrets
+.env
+.env.*
+!.env.example
+*.pem
+
+# Prisma — generated client is a build artifact (regenerated via postinstall)
+packages/db/src/generated/
+packages/db/prisma/migrations/dev.db*
+
+# Logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Test / coverage
+coverage/
+.vitest/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# Vercel
+.vercel/
+
+# Misc
+*.local

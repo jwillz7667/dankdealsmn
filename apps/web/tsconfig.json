@@ -1,0 +1,27 @@
+{
+  "extends": "@dankdeals/config/tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["DOM", "DOM.Iterable", "ES2022"],
+    "jsx": "preserve",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "noEmit": true,
+    // A Next.js app emits no .d.ts; disabling declaration also avoids TS2742 on
+    // next-auth's non-portable @auth/core inferred types under pnpm.
+    "declaration": false,
+    "sourceMap": false,
+    "incremental": true,
+    "allowJs": true,
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./src/*"]
+    }
+  },
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules", ".next", "dist", ".turbo"]
+}

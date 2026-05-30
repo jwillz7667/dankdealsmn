@@ -1,0 +1,38 @@
+# Local development infrastructure. Production uses Railway-managed Postgres + Redis.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: dankdeals-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: dankdeals
+      POSTGRES_PASSWORD: dankdeals
+      POSTGRES_DB: dankdeals
+    ports:
+      - '5432:5432'
+    volumes:
+      - dankdeals_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U dankdeals']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    container_name: dankdeals-redis
+    restart: unless-stopped
+    command: ['redis-server', '--appendonly', 'yes']
+    ports:
+      - '6379:6379'
+    volumes:
+      - dankdeals_redis:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  dankdeals_pg:
+  dankdeals_redis:

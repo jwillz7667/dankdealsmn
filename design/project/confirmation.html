@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Order Confirmed — DankDeals</title>
+<link rel="icon" href="assets/car-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .conf-hero { background: linear-gradient(180deg, var(--green-50), #fff); border-bottom: 1.5px solid var(--line); }
+  .conf-hero__in { text-align: center; padding-block: 36px 30px; }
+  .conf-check { width: 76px; height: 76px; border-radius: 50%; background: var(--green); display: grid; place-items: center; margin: 0 auto 16px; box-shadow: var(--sh-green); animation: pop .5s var(--ease); }
+  .conf-check svg { width: 42px; height: 42px; color: #fff; stroke-width: 3; }
+  @keyframes pop { 0% { transform: scale(0); } 60% { transform: scale(1.12); } 100% { transform: scale(1); } }
+  .conf-hero h1 { font-size: clamp(2rem, 8vw, 3rem); }
+  .conf-hero .ordno { display: inline-flex; gap: 8px; align-items: center; background: #fff; border: 1.5px solid var(--line); border-radius: var(--pill); padding: 8px 16px; margin-top: 12px; font-weight: 600; }
+  .conf-hero .ordno b { font-family: var(--font-display); }
+
+  .conf-grid { display: grid; grid-template-columns: 1fr; gap: 22px; align-items: start; }
+
+  /* tracking */
+  .track { border: 1.5px solid var(--line); border-radius: var(--r-lg); padding: 22px; background: #fff; }
+  .track__eta { display: flex; align-items: center; gap: 14px; margin-bottom: 22px; }
+  .track__eta .big { font-family: var(--font-display); font-weight: 800; font-size: 2rem; line-height: 1; letter-spacing: -.02em; }
+  .track__eta .lbl { color: var(--muted); font-size: .85rem; }
+  .track__eta .carwrap { width: 58px; height: 58px; border-radius: 16px; background: var(--green-50); display: grid; place-items: center; }
+  .track__eta .carwrap img { width: 40px; }
+
+  .progress-track { position: relative; height: 6px; background: var(--surface-2); border-radius: 99px; margin: 40px 0 8px; }
+  .progress-track i { position: absolute; left: 0; top: 0; height: 100%; background: var(--green); border-radius: 99px; transition: width .8s var(--ease); }
+  .progress-car { position: absolute; top: 50%; transform: translate(-50%, -50%); transition: left .8s var(--ease); z-index: 2; }
+  .progress-car img { width: 44px; filter: drop-shadow(0 4px 6px rgba(0,0,0,.18)); }
+  .progress-nodes { display: flex; justify-content: space-between; margin-top: 14px; }
+  .pnode { text-align: center; flex: 1; font-size: .72rem; color: var(--muted); font-weight: 600; }
+  .pnode.on { color: var(--green-700); }
+  .pnode .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--surface-2); margin: 0 auto 6px; transition: .3s; }
+  .pnode.on .dot { background: var(--green); box-shadow: 0 0 0 4px var(--green-100); }
+
+  .timeline { margin-top: 26px; }
+  .tl-item { display: flex; gap: 14px; }
+  .tl-item__rail { display: flex; flex-direction: column; align-items: center; }
+  .tl-item__dot { width: 30px; height: 30px; border-radius: 50%; background: var(--surface-2); color: var(--muted); display: grid; place-items: center; flex-shrink: 0; }
+  .tl-item__dot svg { width: 16px; height: 16px; }
+  .tl-item.done .tl-item__dot { background: var(--green); color: #fff; }
+  .tl-item.active .tl-item__dot { background: var(--ink); color: #fff; animation: pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100% { box-shadow: 0 0 0 0 rgba(59,147,34,.4); } 50% { box-shadow: 0 0 0 8px rgba(59,147,34,0); } }
+  .tl-item__line { width: 2px; flex: 1; background: var(--line); margin: 4px 0; min-height: 22px; }
+  .tl-item:last-child .tl-item__line { display: none; }
+  .tl-item__body { padding-bottom: 18px; }
+  .tl-item__body b { font-family: var(--font-display); font-size: 1rem; display: block; }
+  .tl-item__body span { font-size: .85rem; color: var(--muted); }
+  .tl-item.done .tl-item__body b, .tl-item.active .tl-item__body b { color: var(--ink); }
+
+  /* driver */
+  .driver { display: flex; gap: 14px; align-items: center; padding: 16px; background: var(--surface); border-radius: var(--r); margin-top: 20px; }
+  .driver__ava { width: 52px; height: 52px; border-radius: 50%; background: var(--green); color: #fff; display: grid; place-items: center; font-family: var(--font-display); font-weight: 800; font-size: 1.2rem; flex-shrink: 0; }
+  .driver__info b { font-family: var(--font-display); display: block; }
+  .driver__info span { font-size: .82rem; color: var(--muted); }
+  .driver__actions { margin-left: auto; display: flex; gap: 8px; }
+  .driver__actions .icon-btn { background: #fff; border: 1.5px solid var(--line); }
+
+  .map { position: relative; border-radius: var(--r-lg); overflow: hidden; border: 1.5px solid var(--line); }
+  .map image-slot { width: 100%; aspect-ratio: 16/10; }
+  .map__pin { position: absolute; bottom: 12px; left: 12px; background: #fff; border-radius: var(--pill); padding: 7px 14px 7px 7px; display: flex; gap: 8px; align-items: center; box-shadow: var(--sh); font-size: .85rem; font-weight: 600; }
+  .map__pin img { width: 28px; }
+
+  .conf-side { border: 1.5px solid var(--line); border-radius: var(--r-lg); padding: 22px; background: #fff; }
+  .conf-side h3 { font-size: 1.15rem; margin-bottom: 14px; }
+  .sum-line { display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; padding: 9px 0; align-items: center; font-size: .9rem; border-bottom: 1px solid var(--line); }
+  .sum-line:last-of-type { border-bottom: none; }
+  .sum-line image-slot { width: 44px; height: 44px; }
+  .sum-line .nm { font-weight: 600; line-height: 1.2; }
+  .sum-line .qx { color: var(--muted); font-size: .8rem; }
+
+  @media (min-width: 880px) {
+    .conf-grid { grid-template-columns: 1fr 360px; gap: 40px; }
+    .conf-side { position: sticky; top: calc(var(--header-h) + 16px); }
+  }
+</style>
+</head>
+<body data-page="">
+
+<section class="conf-hero">
+  <div class="wrap conf-hero__in" id="confHead"></div>
+</section>
+
+<main class="wrap section" style="padding-top:26px">
+  <div class="conf-grid" id="confRoot"></div>
+</main>
+
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/image-slot.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/confirmation.js"></script>
+</body>
+</html>

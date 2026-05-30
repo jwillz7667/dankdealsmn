@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Product — DankDeals</title>
+<link rel="icon" href="assets/car-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<style>
+  .pdp { display: grid; grid-template-columns: 1fr; gap: 24px; }
+  .pdp__gallery image-slot { width: 100%; aspect-ratio: 1/1; }
+  .pdp__thumbs { display: flex; gap: 10px; margin-top: 10px; }
+  .pdp__thumbs image-slot { width: 64px; height: 64px; }
+  .pdp__crumb { font-size: .82rem; color: var(--muted); margin: 16px 0; display: flex; gap: 6px; flex-wrap: wrap; }
+  .pdp__crumb a:hover { color: var(--green-700); }
+  .pdp__brand { font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: .8rem; color: var(--muted); }
+  .pdp h1 { font-size: clamp(1.8rem, 7vw, 2.6rem); margin: 4px 0 10px; }
+  .pdp__rating { display: flex; align-items: center; gap: 10px; font-size: .9rem; color: var(--muted); margin-bottom: 16px; }
+  .pdp__pills { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 18px; }
+  .pdp__price { display: flex; align-items: baseline; gap: 10px; margin: 18px 0; }
+  .pdp__price .price { font-size: 2.1rem; }
+  .pdp__buy { display: flex; gap: 12px; align-items: center; margin: 18px 0; }
+  .effects { display: flex; gap: 8px; flex-wrap: wrap; }
+  .effect { background: var(--green-50); color: var(--green-700); border-radius: var(--pill); padding: 8px 15px; font-weight: 600; font-size: .9rem; }
+  .pdp__desc { font-size: 1.02rem; color: var(--ink-2); line-height: 1.65; margin: 8px 0 20px; }
+  .specs { border: 1.5px solid var(--line); border-radius: var(--r-lg); overflow: hidden; }
+  .specs__row { display: flex; justify-content: space-between; padding: 14px 18px; border-bottom: 1px solid var(--line); font-size: .95rem; }
+  .specs__row:last-child { border-bottom: none; }
+  .specs__row span:first-child { color: var(--muted); }
+  .specs__row b { font-family: var(--font-display); }
+  .infonote { display: flex; gap: 10px; align-items: flex-start; background: var(--surface); border-radius: var(--r); padding: 14px 16px; font-size: .9rem; color: var(--ink-2); margin-top: 16px; }
+  .infonote .ic { color: var(--green); flex-shrink: 0; }
+  .infonote .ic svg { width: 20px; height: 20px; }
+
+  /* sticky mobile buy bar */
+  .buybar { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; background: rgba(255,255,255,.96); backdrop-filter: blur(10px); border-top: 1.5px solid var(--line); padding: 12px 16px calc(12px + env(safe-area-inset-bottom)); display: flex; gap: 12px; align-items: center; }
+  .buybar .price { font-size: 1.3rem; }
+
+  @media (min-width: 860px) {
+    .pdp { grid-template-columns: 1fr 1fr; gap: 48px; align-items: start; }
+    .pdp__gallery { position: sticky; top: calc(var(--header-h) + 16px); }
+    .buybar { display: none; }
+  }
+</style>
+</head>
+<body data-page="shop">
+
+<div class="wrap">
+  <nav class="pdp__crumb" id="crumb"></nav>
+</div>
+
+<main class="wrap" style="padding-bottom:90px">
+  <div class="pdp" id="pdp"></div>
+
+  <!-- Related -->
+  <section class="section" style="padding-bottom:0">
+    <div class="sec-head"><div><span class="eyebrow">You might also like</span><h2>Related products</h2></div></div>
+    <div class="rail" id="related"></div>
+  </section>
+</main>
+
+<div class="buybar" id="buybar"></div>
+
+<script src="js/data.js"></script>
+<script src="js/store.js"></script>
+<script src="js/theme.js"></script>
+<script src="js/image-slot.js"></script>
+<script src="js/chrome.js"></script>
+<script src="js/product.js"></script>
+</body>
+</html>
