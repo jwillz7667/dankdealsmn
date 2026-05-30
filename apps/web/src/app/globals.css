@@ -990,19 +990,26 @@ textarea.input:focus {
   position: fixed;
   inset: 0;
   z-index: 500;
-  background: var(--ink);
-  color: #fff;
+  background: rgba(12, 15, 11, 0.72);
+  backdrop-filter: blur(4px);
   display: grid;
   place-items: center;
   padding: 24px;
 }
 .agegate__card {
   max-width: 420px;
+  width: 100%;
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  background: var(--white);
+  color: var(--ink);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 32px 28px;
+  box-shadow: 0 24px 60px -20px rgba(12, 15, 11, 0.5);
 }
 .agegate__card .car {
   width: 92px;
@@ -1016,9 +1023,10 @@ textarea.input:focus {
 }
 .agegate__card h2 {
   font-size: 2rem;
+  color: var(--ink);
 }
 .agegate__card p {
-  color: #aab4a3;
+  color: var(--muted);
   margin: 6px 0 12px;
 }
 .agegate__btns {

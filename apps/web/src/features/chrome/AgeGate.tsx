@@ -53,12 +53,11 @@ export function AgeGate() {
                 type="button"
                 className="btn btn--ghost btn--block"
                 onClick={() => setPhase('declined')}
-                style={{ color: '#fff', borderColor: 'rgba(255,255,255,.3)' }}
               >
                 No, take me back
               </button>
             </div>
-            <p style={{ fontSize: '.78rem', color: '#7c857a', marginTop: 14 }}>
+            <p style={{ fontSize: '.78rem', color: 'var(--muted)', marginTop: 14 }}>
               By entering you agree to our Terms &amp; Privacy Policy.
             </p>
           </>
