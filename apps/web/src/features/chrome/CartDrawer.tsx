@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { ShoppingCart, X, Truck, Check } from 'lucide-react';
 import { ProductMedia } from '@/components/ProductMedia';
 import { money } from '@/lib/format';
-import { cartItemList, cartSubtotalCents, useCartStore } from '@/features/cart/store';
+import { cartSubtotalCents, useCartItems, useCartStore } from '@/features/cart/store';
 import { useUiStore } from '@/features/chrome/ui-store';
 import { useHydrated } from '@/lib/use-hydrated';
 
@@ -16,7 +16,7 @@ interface CartDrawerProps {
 export function CartDrawer({ deliveryFeeCents, freeDeliveryThresholdCents }: CartDrawerProps) {
   const isOpen = useUiStore((s) => s.overlay === 'cart');
   const close = useUiStore((s) => s.closeOverlay);
-  const items = useCartStore(cartItemList);
+  const items = useCartItems();
   const subtotal = useCartStore(cartSubtotalCents);
   const setQty = useCartStore((s) => s.setQty);
   const remove = useCartStore((s) => s.remove);

@@ -8,7 +8,7 @@ import { ProductMedia } from '@/components/ProductMedia';
 import { ApiError } from '@/lib/api/client';
 import { money } from '@/lib/format';
 import { useHydrated } from '@/lib/use-hydrated';
-import { cartItemList, cartSubtotalCents, useCartStore } from '@/features/cart/store';
+import { cartSubtotalCents, useCartItems, useCartStore } from '@/features/cart/store';
 import type { CreateOrderRequest } from '@/lib/api/types';
 import { placeOrder } from './api';
 import {
@@ -48,7 +48,7 @@ export function CheckoutForm({
   const router = useRouter();
   const hydrated = useHydrated();
 
-  const items = useCartStore(cartItemList);
+  const items = useCartItems();
   const snapshotSubtotal = useCartStore(cartSubtotalCents);
   const clearCart = useCartStore((s) => s.clear);
 

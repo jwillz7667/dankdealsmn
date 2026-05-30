@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { createJSONStorage, persist } from 'zustand/middleware';
+import { useShallow } from 'zustand/react/shallow';
 import type { Product } from '@/lib/api/types';
 
 /** Display-only snapshot. Authoritative prices are always recomputed server-side. */
@@ -84,6 +85,15 @@ export const useCartStore = create<CartState>()(
 // ---- derived selectors ----
 export const cartItemList = (s: CartState): CartItem[] =>
   Object.values(s.items).sort((a, b) => a.name.localeCompare(b.name));
+
+/**
+ * Subscribe to the sorted cart items. `cartItemList` allocates a new array on
+ * every call, so it MUST be read through `useShallow`: under zustand v5 a
+ * selector that returns a fresh reference each render makes the underlying
+ * `useSyncExternalStore` see a perpetual change and loop forever (React #185).
+ * Always use this hook in components — never `useCartStore(cartItemList)`.
+ */
+export const useCartItems = (): CartItem[] => useCartStore(useShallow(cartItemList));
 
 export const cartCount = (s: CartState): number =>
   Object.values(s.items).reduce((n, i) => n + i.qty, 0);

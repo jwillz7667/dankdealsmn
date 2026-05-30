@@ -6,7 +6,7 @@ import { Check, ChevronLeft, Info, Leaf, Lock, ShoppingCart, Truck } from 'lucid
 import { ProductMedia } from '@/components/ProductMedia';
 import { money } from '@/lib/format';
 import { useHydrated } from '@/lib/use-hydrated';
-import { cartItemList, cartSubtotalCents, useCartStore } from '@/features/cart/store';
+import { cartSubtotalCents, useCartItems, useCartStore } from '@/features/cart/store';
 import { usePromoStore } from './promo-store';
 import { useQuote } from './use-quote';
 
@@ -21,7 +21,7 @@ export function CartView({
   freeDeliveryThresholdCents,
   minOrderCents,
 }: CartViewProps) {
-  const items = useCartStore(cartItemList);
+  const items = useCartItems();
   const snapshotSubtotal = useCartStore(cartSubtotalCents);
   const setQty = useCartStore((s) => s.setQty);
   const remove = useCartStore((s) => s.remove);
