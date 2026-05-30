@@ -18,9 +18,12 @@ build/
 !.env.example
 *.pem
 
-# Prisma — generated client is a build artifact (regenerated via postinstall)
-packages/db/src/generated/
+# Prisma — generated client is a build artifact (regenerated via postinstall/build)
+packages/db/generated/
 packages/db/prisma/migrations/dev.db*
+
+# Compiled output of the shared db package (runtime entry; rebuilt via `db build`)
+packages/db/dist/
 
 # Logs
 *.log

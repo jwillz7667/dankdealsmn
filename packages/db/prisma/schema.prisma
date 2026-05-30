@@ -4,8 +4,12 @@
 
 generator client {
   provider        = "prisma-client-js"
-  output          = "../src/generated/client"
+  // Emitted at the package root (not under src/) so the compiled `dist/index.js`
+  // and the TypeScript `src/index.ts` both resolve it via the same `../generated`
+  // relative path. See packages/db/package.json `exports`.
+  output          = "../generated/client"
   previewFeatures = []
+  binaryTargets   = ["native", "debian-openssl-3.0.x"]
 }
 
 datasource db {

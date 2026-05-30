@@ -181,6 +181,9 @@ importers:
       '@prisma/client':
         specifier: ^5.20.0
         version: 5.22.0(prisma@5.22.0)
+      prisma:
+        specifier: ^5.20.0
+        version: 5.22.0
     devDependencies:
       '@dankdeals/config':
         specifier: workspace:*
@@ -188,9 +191,6 @@ importers:
       '@types/node':
         specifier: ^22.7.4
         version: 22.19.19
-      prisma:
-        specifier: ^5.20.0
-        version: 5.22.0
       tsx:
         specifier: ^4.19.1
         version: 4.22.3

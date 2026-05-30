@@ -1,7 +1,7 @@
-import { PrismaClient } from './generated/client/index.js';
+import { PrismaClient } from '../generated/client/index.js';
 
-export * from './generated/client/index.js';
-export { Prisma } from './generated/client/index.js';
+export * from '../generated/client/index.js';
+export { Prisma } from '../generated/client/index.js';
 
 // Singleton — avoids exhausting connections during dev hot-reload and serverless.
 const globalForPrisma = globalThis as unknown as { prisma?: PrismaClient };

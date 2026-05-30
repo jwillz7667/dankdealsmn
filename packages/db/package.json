@@ -4,14 +4,18 @@
   "private": true,
   "license": "UNLICENSED",
   "type": "module",
-  "main": "./src/index.ts",
+  "main": "./dist/index.js",
   "types": "./src/index.ts",
   "exports": {
-    ".": "./src/index.ts",
-    "./enums": "./src/generated/client/index.js"
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./dist/index.js"
+    },
+    "./enums": "./generated/client/index.js"
   },
   "scripts": {
     "postinstall": "prisma generate",
+    "build": "prisma generate && tsc -p tsconfig.build.json",
     "generate": "prisma generate",
     "migrate": "prisma migrate dev",
     "migrate:deploy": "prisma migrate deploy",
@@ -25,12 +29,12 @@
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
-    "@prisma/client": "^5.20.0"
+    "@prisma/client": "^5.20.0",
+    "prisma": "^5.20.0"
   },
   "devDependencies": {
     "@dankdeals/config": "workspace:*",
     "@types/node": "^22.7.4",
-    "prisma": "^5.20.0",
     "tsx": "^4.19.1",
     "typescript": "^5.6.2"
   }

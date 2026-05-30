@@ -6,7 +6,7 @@
  *
  * Set SEED_ADMIN_EMAIL to grant ADMIN to your login on first sign-in.
  */
-import { PrismaClient, type Badge, type StrainType } from '../src/generated/client/index.js';
+import { PrismaClient, type Badge, type StrainType } from '../generated/client/index.js';
 
 const prisma = new PrismaClient();
 
