@@ -19,6 +19,12 @@ wrangler login                          # opens a browser; authorizes your accou
 wrangler whoami                         # confirm the account + email
 ```
 
+> A pre-existing wrangler session may have been authorized **without R2 scopes**
+> (`r2:write`). If `wrangler r2 bucket list` returns an authorization error, run
+> `wrangler logout && wrangler login` to re-grant — the current login flow requests
+> R2 permissions. DNS records (step 5) need a token with **Zone:DNS:Edit**, which the
+> OAuth login does not grant; create that separately under *My Profile → API Tokens*.
+
 ```bash
 export CF_BUCKET="dankdeals-media"            # matches R2_BUCKET in the API config
 export CF_ZONE="dankdealsmn.com"
@@ -73,19 +79,39 @@ Set these on Railway (API) — see `infra/cloudflare/../../railway.json` and the
 
 ## 5. DNS records (Cloudflare zone `dankdealsmn.com`)
 
-`media` is created in step 3. Add the apex (Vercel) and `api` (Railway) records.
-Use the exact CNAME/A targets Vercel and Railway show in their dashboards.
+These are the **live targets** as provisioned (Vercel project `dankdealsmn`,
+Railway service `dankdealsmn`). `media` is created in step 3. Add the records
+below in the Cloudflare zone. Re-confirm against the Vercel/Railway dashboards
+if a platform rotates an anycast IP or CNAME target.
+
+### 5a. Vercel domain ownership (TXT) — required first
+
+Because DNS lives in Cloudflare (not on Vercel nameservers), Vercel verifies
+ownership via a TXT record. Add **one** `_vercel` TXT host with both values
+(Cloudflare allows multiple TXT values on the same name):
+
+| Host       | Type | Value                                                  |
+| ---------- | ---- | ------------------------------------------------------ |
+| `_vercel`  | TXT  | `vc-domain-verify=dankdealsmn.com,5cb5f418badf80d32b30`     |
+| `_vercel`  | TXT  | `vc-domain-verify=www.dankdealsmn.com,0509c94cc8080544fd48` |
+
+### 5b. Traffic records
 
 | Host                      | Type  | Target                          | Proxy        | Serves        |
 | ------------------------- | ----- | ------------------------------- | ------------ | ------------- |
-| `dankdealsmn.com` (apex)  | A     | `76.76.21.21` (Vercel)          | DNS only¹    | Storefront    |
+| `dankdealsmn.com` (apex)  | A     | `64.29.17.65`                   | DNS only¹    | Storefront    |
+| `dankdealsmn.com` (apex)  | A     | `216.198.79.65`                 | DNS only¹    | Storefront    |
 | `www`                     | CNAME | `cname.vercel-dns.com`          | DNS only¹    | → apex        |
-| `api`                     | CNAME | `<service>.up.railway.app`      | Proxied      | Fastify API   |
+| `api`                     | CNAME | `50blr5m7.up.railway.app`       | DNS only²    | Fastify API   |
 | `media`                   | CNAME | (managed by R2 in step 3)       | Proxied      | R2 media      |
 
-¹ Vercel manages its own edge/TLS; keep its records **DNS only** (grey cloud) unless
-you have configured Cloudflare's proxy to coexist with Vercel. Railway and R2 records
-are proxied (orange cloud).
+¹ Vercel manages its own edge/TLS; keep its records **DNS only** (grey cloud).
+  Cloudflare flattens an apex `CNAME`, so you may instead set the apex to a
+  `CNAME → cname.vercel-dns.com` (DNS only) rather than the two A records.
+² Railway provisions the TLS cert for `api.dankdealsmn.com` via this CNAME — keep
+  it **DNS only** (grey cloud) until the cert is issued. You may switch it to
+  Proxied (orange) afterward with SSL mode **Full (strict)** if you want Cloudflare
+  in front of the API.
 
 Add a record from the CLI (example for `api`):
 
@@ -94,7 +120,7 @@ Add a record from the CLI (example for `api`):
 curl -sS -X POST "https://api.cloudflare.com/client/v4/zones/$ZONE_ID/dns_records" \
   -H "Authorization: Bearer $CLOUDFLARE_API_TOKEN" \
   -H "Content-Type: application/json" \
-  --data '{"type":"CNAME","name":"api","content":"<service>.up.railway.app","proxied":true}'
+  --data '{"type":"CNAME","name":"api","content":"50blr5m7.up.railway.app","proxied":false}'
 ```
 
 ## Verify
