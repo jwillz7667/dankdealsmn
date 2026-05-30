@@ -6,6 +6,9 @@ import { z } from 'zod';
  */
 const EnvSchema = z.object({
   NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  // `PORT` is injected by the platform (Railway). It takes precedence over the
+  // explicit `API_PORT` so the service binds to the port the proxy routes to.
+  PORT: z.coerce.number().int().positive().optional(),
   API_PORT: z.coerce.number().int().positive().default(4000),
 
   DATABASE_URL: z.string().url(),

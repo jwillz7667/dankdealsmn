@@ -1,0 +1,28 @@
+# Keep the Docker build context small and reproducible. Dependencies, build
+# artifacts and the generated Prisma client are produced inside the image.
+**/node_modules
+**/.next
+**/dist
+**/.turbo
+**/coverage
+packages/db/generated
+
+# VCS / local / editor
+.git
+.gitignore
+**/*.log
+.DS_Store
+.idea
+.vscode
+
+# Env files — never bake secrets into an image (Railway injects them at runtime)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Not needed by the API image
+design
+apps/web/public
+README.md
+docs
+**/*.test.ts
