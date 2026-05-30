@@ -20,8 +20,8 @@ const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFr
 
 // Bounded pagination: cap total products in the sitemap and surface truncation in logs
 // rather than silently dropping URLs or fanning out an unbounded request loop.
-const PRODUCT_PAGE_SIZE = 100;
-const MAX_PRODUCT_PAGES = 30; // up to 3,000 products — well under the 50k sitemap limit.
+const PRODUCT_PAGE_SIZE = 50; // must stay within the API's max page size (catalog.schema limit.max=60).
+const MAX_PRODUCT_PAGES = 60; // up to 3,000 products — well under the 50k sitemap limit.
 
 async function collectProducts(): Promise<{ slug: string; lastModified: string }[]> {
   const out: { slug: string; lastModified: string }[] = [];
