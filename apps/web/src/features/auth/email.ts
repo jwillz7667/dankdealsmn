@@ -27,8 +27,8 @@ function htmlBody(url: string): string {
         <td align="center">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;background:#ffffff;border:1px solid #e3e8dd;border-radius:16px;overflow:hidden;">
             <tr>
-              <td style="background:#0c0f0b;padding:24px 28px;">
-                <span style="font-size:20px;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">🌿 ${SITE.name}</span>
+              <td align="center" style="background:#ffffff;padding:24px 28px;border-bottom:1px solid #eef1e9;">
+                <img src="${SITE.url}/brand/logo.png" alt="${SITE.name}" width="220" height="23" style="display:block;width:220px;height:auto;border:0;" />
               </td>
             </tr>
             <tr>
