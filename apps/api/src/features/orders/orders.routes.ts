@@ -45,7 +45,7 @@ export default async function orderRoutes(fastify: FastifyInstance): Promise<voi
 
       // Side effect at the edge: confirmation email is best-effort, never blocks checkout.
       const { order } = result;
-      const etaText = order.scheduledWindow ?? (order.etaAt ? 'within the hour' : 'soon');
+      const etaText = order.scheduledWindow ?? (order.etaAt ? 'in 60–90 minutes' : 'soon');
       void app.services.mailer
         .sendOrderConfirmation({
           to: order.customer.email,

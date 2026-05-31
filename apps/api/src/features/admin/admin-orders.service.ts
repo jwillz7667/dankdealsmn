@@ -100,8 +100,15 @@ export async function updateOrderStatus(
   });
   if (!order) throw AppError.notFound('Order not found');
 
+  // Same status + a note appends a customer-facing timeline event without a state
+  // change, so an admin can post an update while the order stays in its stage.
   if (order.status === status) {
-    throw AppError.unprocessable(`Order is already ${status}.`);
+    if (!message) throw AppError.unprocessable(`Order is already ${status}.`);
+    const noted = await prisma.$transaction(async (tx) => {
+      await tx.orderEvent.create({ data: { orderId: order.id, status, message } });
+      return tx.order.findUniqueOrThrow({ where: { id: order.id }, include: orderInclude });
+    });
+    return serializeOrder(noted);
   }
   if (!NEXT[order.status].includes(status)) {
     throw AppError.unprocessable(`Cannot move an order from ${order.status} to ${status}.`);

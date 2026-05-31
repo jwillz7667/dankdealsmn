@@ -134,7 +134,15 @@ export default async function adminProductRoutes(fastify: FastifyInstance): Prom
         response: { 200: AdminProductSchema },
       },
     },
-    async (req) => reorderProductImages(req.params.id, req.body),
+    async (req) => {
+      const product = await reorderProductImages(req.params.id, req.body);
+      await recordAudit(req, {
+        action: 'product.image.reorder',
+        entityType: 'Product',
+        entityId: req.params.id,
+      });
+      return product;
+    },
   );
 
   app.delete(
