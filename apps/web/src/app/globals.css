@@ -1399,7 +1399,8 @@ textarea.input:focus {
   gap: 8px;
   margin-top: 18px;
 }
-.area__zones span {
+.area__zones span,
+.area__zones a {
   background: rgba(255, 255, 255, 0.08);
   border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--pill);
@@ -1407,7 +1408,17 @@ textarea.input:focus {
   font-size: 0.88rem;
   font-weight: 500;
 }
-.area__zones span.on {
+.area__zones a {
+  color: #fff;
+  text-decoration: none;
+  transition: 0.15s var(--ease);
+}
+.area__zones a:hover {
+  background: rgba(255, 255, 255, 0.16);
+  border-color: var(--green);
+}
+.area__zones span.on,
+.area__zones a.on {
   background: var(--green);
   border-color: var(--green);
 }
@@ -2532,7 +2543,7 @@ textarea.input:focus {
     grid-auto-columns: 25%;
   }
   .ftr__top {
-    grid-template-columns: 2fr 1fr 1fr 1fr;
+    grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
     gap: 40px;
   }
   .ftr__bottom {

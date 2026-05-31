@@ -7,6 +7,7 @@ import { ProductRail } from '@/features/catalog/components/ProductGrid';
 import { NewsletterForm } from '@/features/newsletter/NewsletterForm';
 import { getCategories, getProducts } from '@/features/catalog/api';
 import { getStoreConfig } from '@/features/store/api';
+import { slugForCityName } from '@/features/delivery';
 import { organizationJsonLd, webSiteJsonLd } from '@/lib/seo';
 
 export const revalidate = 300;
@@ -34,7 +35,7 @@ export default async function HomePage() {
 
   return (
     <>
-      <JsonLd data={[organizationJsonLd(), webSiteJsonLd()]} />
+      <JsonLd data={[organizationJsonLd(store.zones), webSiteJsonLd()]} />
 
       {/* Hero */}
       <section className="hero">
@@ -241,15 +242,27 @@ export default async function HomePage() {
             <h2>Delivering across the Twin Cities &amp; metro</h2>
             <p style={{ color: '#aab4a3', maxWidth: '50ch' }}>
               Enter your address at checkout to confirm coverage. We deliver 10am–10pm, seven days a week — rain, shine
-              or snow.
+              or snow. Tap your city for local delivery details.
             </p>
             <div className="area__zones">
-              {store.zones.map((z, i) => (
-                <span key={z} className={i < 2 ? 'on' : undefined}>
-                  {z}
-                </span>
-              ))}
+              {store.zones.map((z, i) => {
+                const slug = slugForCityName(z);
+                const className = i < 2 ? 'on' : undefined;
+                return slug ? (
+                  <Link key={z} href={`/delivery/${slug}`} className={className}>
+                    {z}
+                  </Link>
+                ) : (
+                  <span key={z} className={className}>
+                    {z}
+                  </span>
+                );
+              })}
             </div>
+            <Link className="btn btn--ghost" href="/delivery" style={{ marginTop: 18, alignSelf: 'flex-start' }}>
+              View all delivery areas
+              <ArrowRight aria-hidden />
+            </Link>
           </div>
         </div>
       </section>

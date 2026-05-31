@@ -87,6 +87,14 @@ const nextConfig = {
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
+  async redirects() {
+    return [
+      // The prototype shipped a /menu route that still earns impressions (and a
+      // top-3 ranking for ?category= deep links). Permanently fold it into /shop;
+      // Next forwards the query string, so /menu?category=edibles → /shop?category=edibles.
+      { source: '/menu', destination: '/shop', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

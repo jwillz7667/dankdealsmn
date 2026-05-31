@@ -2,15 +2,19 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { Phone } from 'lucide-react';
 import { Logo } from '@/components/Logo';
+import { CITIES } from '@/features/delivery';
 import { FDA_DISCLAIMER, SITE } from '@/lib/site';
 import type { Category } from '@/lib/api/types';
 
 const COMPANY_LINKS = [
   { label: 'How it works', href: '/#how' },
-  { label: 'Delivery area', href: '/#area' },
   { label: 'About us', href: '/about' },
   { label: 'Contact', href: '/contact' },
 ] as const;
+
+// Sitewide internal links to the highest-intent city pages; the rest live on
+// the /delivery hub, which every column links to.
+const FOOTER_CITIES = CITIES.slice(0, 8);
 
 const SUPPORT_LINKS = [
   { label: 'FAQ', href: '/faq' },
@@ -75,6 +79,20 @@ export function Footer({
                 <Link href={l.href}>{l.label}</Link>
               </li>
             ))}
+          </ul>
+        </div>
+
+        <div>
+          <h4>Delivery areas</h4>
+          <ul>
+            {FOOTER_CITIES.map((c) => (
+              <li key={c.slug}>
+                <Link href={`/delivery/${c.slug}`}>{c.name}</Link>
+              </li>
+            ))}
+            <li>
+              <Link href="/delivery">All areas →</Link>
+            </li>
           </ul>
         </div>
 

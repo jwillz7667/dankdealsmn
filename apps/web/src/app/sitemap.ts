@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getCategories, getProducts } from '@/features/catalog/api';
+import { CITY_SLUGS } from '@/features/delivery';
 import { SITE } from '@/lib/site';
 
 // Refresh the generated sitemap hourly; catalog churn is gradual, not real-time.
@@ -10,6 +11,7 @@ type ChangeFrequency = MetadataRoute.Sitemap[number]['changeFrequency'];
 const STATIC_ROUTES: { path: string; priority: number; changeFrequency: ChangeFrequency }[] = [
   { path: '/', priority: 1.0, changeFrequency: 'daily' },
   { path: '/shop', priority: 0.9, changeFrequency: 'daily' },
+  { path: '/delivery', priority: 0.8, changeFrequency: 'weekly' },
   { path: '/about', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/contact', priority: 0.5, changeFrequency: 'monthly' },
   { path: '/faq', priority: 0.5, changeFrequency: 'monthly' },
@@ -57,6 +59,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Per-city delivery landing pages — high local-intent SEO targets.
+  const cityEntries: MetadataRoute.Sitemap = CITY_SLUGS.map((slug) => ({
+    url: `${SITE.url}/delivery/${slug}`,
+    lastModified: now,
+    changeFrequency: 'weekly',
+    priority: 0.7,
+  }));
+
   const productEntries: MetadataRoute.Sitemap = products.map((p) => ({
     url: `${SITE.url}/product/${p.slug}`,
     lastModified: new Date(p.lastModified),
@@ -64,5 +74,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.8,
   }));
 
-  return [...staticEntries, ...categoryEntries, ...productEntries];
+  return [...staticEntries, ...categoryEntries, ...cityEntries, ...productEntries];
 }
