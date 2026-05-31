@@ -18,9 +18,9 @@ declare module 'fastify' {
     auth: AuthContext | null;
   }
   interface FastifyInstance {
-    requireAuth: (req: FastifyRequest) => void;
-    requireRole: (...roles: Role[]) => (req: FastifyRequest) => void;
-    requireService: (req: FastifyRequest) => void;
+    requireAuth: (req: FastifyRequest) => Promise<void>;
+    requireRole: (...roles: Role[]) => (req: FastifyRequest) => Promise<void>;
+    requireService: (req: FastifyRequest) => Promise<void>;
   }
 }
 
@@ -62,21 +62,27 @@ export const authPlugin = fp(
       }
     });
 
-    // Guards throw synchronously; Fastify routes the AppError to the error handler.
-    app.decorate('requireAuth', (req: FastifyRequest) => {
+    // Guards are async so Fastify awaits them as onRequest hooks: a rejection
+    // (thrown AppError) routes to the error handler, and a resolve advances the
+    // chain. A *synchronous* guard that returns undefined never signals
+    // completion to Fastify's hook runner, so authorized requests would hang.
+    // eslint-disable-next-line @typescript-eslint/require-await -- async by design: Fastify must see a promise (see comment above)
+    app.decorate('requireAuth', async (req: FastifyRequest) => {
       if (!req.auth) throw AppError.unauthorized();
     });
 
     app.decorate(
       'requireRole',
       (...roles: Role[]) =>
-        (req: FastifyRequest) => {
+        // eslint-disable-next-line @typescript-eslint/require-await -- async by design: Fastify must see a promise (see comment above)
+        async (req: FastifyRequest) => {
           if (!req.auth) throw AppError.unauthorized();
           if (!roles.includes(req.auth.role)) throw AppError.forbidden();
         },
     );
 
-    app.decorate('requireService', (req: FastifyRequest) => {
+    // eslint-disable-next-line @typescript-eslint/require-await -- async by design: Fastify must see a promise (see comment above)
+    app.decorate('requireService', async (req: FastifyRequest) => {
       if (!req.auth?.service) throw AppError.forbidden('Service token required');
     });
 
