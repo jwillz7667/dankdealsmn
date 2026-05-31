@@ -1,5 +1,15 @@
 // @ts-check
 
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const appDir = path.dirname(fileURLToPath(import.meta.url));
+// Prisma's query-engine binary is copied into apps/web/.prisma/client by
+// scripts/copy-prisma-engine.mjs; trace it into the serverless functions that
+// run the Auth.js Prisma adapter or direct Prisma queries. Next's file-tracer
+// can't follow Prisma's runtime (dynamic) engine load on its own.
+const prismaEngine = ['./.prisma/client/*.node'];
+
 /**
  * Resolve hosts that the app is allowed to talk to / load media from.
  * Values come from env so the same config works in dev, preview and prod.
@@ -56,6 +66,16 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   poweredByHeader: false,
+  // Trace from the monorepo root so bundled files keep their repo-relative paths.
+  outputFileTracingRoot: path.join(appDir, '..', '..'),
+  // Ship the Prisma engine into every function that touches the database.
+  outputFileTracingIncludes: {
+    '/api/**': prismaEngine,
+    '/admin': prismaEngine,
+    '/admin/**': prismaEngine,
+    '/account': prismaEngine,
+    '/account/**': prismaEngine,
+  },
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [

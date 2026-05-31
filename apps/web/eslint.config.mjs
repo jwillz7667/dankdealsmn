@@ -15,6 +15,7 @@ export default tseslint.config(
       'next-env.d.ts',
       'eslint.config.mjs',
       'next.config.mjs',
+      'scripts/**',
     ],
   },
   js.configs.recommended,

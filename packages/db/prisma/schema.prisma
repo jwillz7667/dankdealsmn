@@ -9,7 +9,10 @@ generator client {
   // relative path. See packages/db/package.json `exports`.
   output          = "../generated/client"
   previewFeatures = []
-  binaryTargets   = ["native", "debian-openssl-3.0.x"]
+  // native = local dev; debian = the Railway/Docker API runtime; rhel = Vercel's
+  // serverless (AWS Lambda) runtime, where the web app's Auth.js Prisma adapter
+  // runs. All three engines are generated so one client serves both apps.
+  binaryTargets   = ["native", "debian-openssl-3.0.x", "rhel-openssl-3.0.x"]
 }
 
 datasource db {
