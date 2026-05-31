@@ -6,7 +6,7 @@ import { useSearchParams } from 'next/navigation';
 import { Box, Check, Home, Leaf, Package, Phone, Truck } from 'lucide-react';
 import { ProductMedia } from '@/components/ProductMedia';
 import { ApiError } from '@/lib/api/client';
-import { formatTime, money, statusLabel } from '@/lib/format';
+import { formatTime, moneyExact, statusLabel } from '@/lib/format';
 import { SITE } from '@/lib/site';
 import type { Order, OrderStatus } from '@/lib/api/types';
 import { getOrder } from './api';
@@ -262,38 +262,38 @@ export function OrderTracker({ orderNumber }: { orderNumber: string }) {
                   {it.size ? ` · ${it.size}` : ''}
                 </div>
               </div>
-              <b>{money(it.lineTotalCents)}</b>
+              <b>{moneyExact(it.lineTotalCents)}</b>
             </div>
           ))}
 
           <hr className="divider" style={{ margin: '12px 0' }} />
           <div className="summary-row">
             <span>Subtotal</span>
-            <b>{money(order.totals.subtotalCents)}</b>
+            <b>{moneyExact(order.totals.subtotalCents)}</b>
           </div>
           {order.totals.discountCents > 0 && (
             <div className="summary-row" style={{ color: 'var(--green-700)' }}>
               <span>Discount</span>
-              <b>−{money(order.totals.discountCents)}</b>
+              <b>−{moneyExact(order.totals.discountCents)}</b>
             </div>
           )}
           <div className="summary-row">
             <span>Delivery</span>
-            <b>{order.totals.deliveryFeeCents === 0 ? 'FREE' : money(order.totals.deliveryFeeCents)}</b>
+            <b>{order.totals.deliveryFeeCents === 0 ? 'FREE' : moneyExact(order.totals.deliveryFeeCents)}</b>
           </div>
           {order.totals.tipCents > 0 && (
             <div className="summary-row">
               <span>Driver tip</span>
-              <b>{money(order.totals.tipCents)}</b>
+              <b>{moneyExact(order.totals.tipCents)}</b>
             </div>
           )}
           <div className="summary-row muted">
             <span>Tax</span>
-            <span>{money(order.totals.taxCents)}</span>
+            <span>{moneyExact(order.totals.taxCents)}</span>
           </div>
           <div className="summary-row total">
             <span>Total</span>
-            <span>{money(order.totals.totalCents)}</span>
+            <span>{moneyExact(order.totals.totalCents)}</span>
           </div>
         </aside>
       </div>

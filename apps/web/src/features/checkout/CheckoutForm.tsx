@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Banknote, ChevronLeft, Clock, CreditCard, MapPin, ShieldCheck, Truck, Zap } from 'lucide-react';
 import { ProductMedia } from '@/components/ProductMedia';
 import { ApiError } from '@/lib/api/client';
-import { money } from '@/lib/format';
+import { moneyExact } from '@/lib/format';
 import { useHydrated } from '@/lib/use-hydrated';
 import { cartSubtotalCents, useCartItems, useCartStore } from '@/features/cart/store';
 import type { CreateOrderRequest } from '@/lib/api/types';
@@ -73,16 +73,30 @@ export function CheckoutForm({
     () => items.map((i) => ({ productId: i.productId, quantity: i.qty })),
     [items],
   );
-  const tipCents = Math.round((snapshotSubtotal * form.tipBps) / 10_000);
-  const { quote } = useQuote({ items: lineInputs, promoCode: code, tipCents, enabled: hydrated });
+  // Seed the quote with a tip estimate from the local cart snapshot. The tip is a
+  // percentage of the subtotal (which the tip doesn't affect), so once the server
+  // returns the authoritative subtotal we recompute the tip below — that way the
+  // charge always matches the displayed percentage even if a price changed.
+  const estimatedTipCents = Math.round((snapshotSubtotal * form.tipBps) / 10_000);
+  const { quote } = useQuote({
+    items: lineInputs,
+    promoCode: code,
+    tipCents: estimatedTipCents,
+    enabled: hydrated,
+  });
 
   const totals = quote?.totals ?? null;
   const subtotal = totals?.subtotalCents ?? snapshotSubtotal;
   const discount = totals?.discountCents ?? 0;
   const deliveryFee = totals?.deliveryFeeCents ?? (subtotal >= freeDeliveryThresholdCents ? 0 : deliveryFeeCents);
   const tax = totals?.taxCents ?? 0;
-  const tip = totals?.tipCents ?? tipCents;
-  const total = totals?.totalCents ?? subtotal + deliveryFee + tax + tip;
+  // Authoritative tip: a percentage of the real subtotal, not the stale snapshot.
+  const tipCents = Math.round((subtotal * form.tipBps) / 10_000);
+  // Rebuild the total on the quote's authoritative numbers, swapping its seed-based
+  // tip for the recomputed one (they agree unless a price changed mid-session).
+  const total = totals
+    ? totals.totalCents - totals.tipCents + tipCents
+    : subtotal + deliveryFee + tax + tipCents;
 
   const set = <K extends keyof CheckoutFormState>(key: K, value: CheckoutFormState[K]) => {
     setForm((f) => ({ ...f, [key]: value }));
@@ -127,7 +141,12 @@ export function CheckoutForm({
       rememberOrderToken(result.order.orderNumber, result.trackingToken);
       clearCart();
       clearPromo();
-      router.push(`/order/${result.order.orderNumber}`);
+      // Carry the capability token in the URL so the tracking page works even
+      // when localStorage is unavailable (incognito) or the link is reopened
+      // elsewhere — the API 404s an order without a valid token.
+      router.push(
+        `/order/${result.order.orderNumber}?token=${encodeURIComponent(result.trackingToken)}`,
+      );
     } catch (err) {
       setSubmitting(false);
       setSubmitError(
@@ -439,7 +458,7 @@ export function CheckoutForm({
                   Qty {i.qty} · {i.size}
                 </div>
               </div>
-              <b>{money(i.priceCents * i.qty)}</b>
+              <b>{moneyExact(i.priceCents * i.qty)}</b>
             </div>
           ))}
         </div>
@@ -448,29 +467,29 @@ export function CheckoutForm({
 
         <div className="summary-row">
           <span>Subtotal</span>
-          <b>{money(subtotal)}</b>
+          <b>{moneyExact(subtotal)}</b>
         </div>
         {discount > 0 && (
           <div className="summary-row" style={{ color: 'var(--green-700)' }}>
             <span>Discount{code ? ` (${code.toUpperCase()})` : ''}</span>
-            <b>−{money(discount)}</b>
+            <b>−{moneyExact(discount)}</b>
           </div>
         )}
         <div className="summary-row">
           <span>Delivery</span>
-          <b>{deliveryFee === 0 ? 'FREE' : money(deliveryFee)}</b>
+          <b>{deliveryFee === 0 ? 'FREE' : moneyExact(deliveryFee)}</b>
         </div>
         <div className="summary-row">
           <span>Driver tip{form.tipBps > 0 ? ` (${form.tipBps / 100}%)` : ''}</span>
-          <b>{money(tip)}</b>
+          <b>{moneyExact(tipCents)}</b>
         </div>
         <div className="summary-row muted">
           <span>Estimated tax</span>
-          <span>{money(tax)}</span>
+          <span>{moneyExact(tax)}</span>
         </div>
         <div className="summary-row total">
           <span>Total</span>
-          <span>{money(total)}</span>
+          <span>{moneyExact(total)}</span>
         </div>
 
         {submitError && (
@@ -486,7 +505,7 @@ export function CheckoutForm({
           onClick={() => void submit()}
           disabled={submitting}
         >
-          <Truck aria-hidden /> {submitting ? 'Placing order…' : `Place order · ${money(total)}`}
+          <Truck aria-hidden /> {submitting ? 'Placing order…' : `Place order · ${moneyExact(total)}`}
         </button>
         <Link className="btn btn--ghost btn--block btn--sm" href="/cart" style={{ marginTop: 8 }}>
           <ChevronLeft aria-hidden /> Back to cart
