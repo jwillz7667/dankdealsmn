@@ -45,10 +45,6 @@ export const authConfig = {
   },
   providers,
   callbacks: {
-    // Used by middleware for matched routes (see middleware matcher): require a session.
-    authorized({ auth }) {
-      return Boolean(auth?.user);
-    },
     jwt({ token, user }) {
       if (user) {
         token.id = user.id;
