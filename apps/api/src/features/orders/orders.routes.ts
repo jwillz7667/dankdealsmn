@@ -9,6 +9,7 @@ import {
   QuoteResponseSchema,
 } from './orders.schema.js';
 import { createOrder, getOrderByNumber, quoteOrder } from './orders.service.js';
+import type { OrderEmailData } from '../../infrastructure/mail.js';
 
 // eslint-disable-next-line @typescript-eslint/require-await
 export default async function orderRoutes(fastify: FastifyInstance): Promise<void> {
@@ -43,18 +44,39 @@ export default async function orderRoutes(fastify: FastifyInstance): Promise<voi
         trackingSecret,
       });
 
-      // Side effect at the edge: confirmation email is best-effort, never blocks checkout.
-      const { order } = result;
+      // Side effects at the edge: emails are best-effort and never block checkout.
+      const { order, trackingToken } = result;
       const etaText = order.scheduledWindow ?? (order.etaAt ? 'in 60–90 minutes' : 'soon');
+      const emailData: OrderEmailData = {
+        orderNumber: order.orderNumber,
+        trackingToken,
+        customerName: order.customer.name,
+        customerEmail: order.customer.email,
+        customerPhone: order.customer.phone,
+        address: order.address,
+        paymentMethod: order.paymentMethod,
+        deliveryType: order.deliveryType,
+        scheduledWindow: order.scheduledWindow,
+        etaText,
+        idVerified: order.idVerified,
+        promoCode: order.promoCode,
+        items: order.items.map((i) => ({
+          name: i.name,
+          brand: i.brand,
+          size: i.size,
+          quantity: i.quantity,
+          unitPriceCents: i.unitPriceCents,
+          lineTotalCents: i.lineTotalCents,
+        })),
+        totals: order.totals,
+      };
+
       void app.services.mailer
-        .sendOrderConfirmation({
-          to: order.customer.email,
-          orderNumber: order.orderNumber,
-          customerName: order.customer.name,
-          totalCents: order.totals.totalCents,
-          etaText,
-        })
+        .sendOrderConfirmation(emailData)
         .catch((err: unknown) => req.log.warn({ err }, 'order confirmation email failed'));
+      void app.services.mailer
+        .sendAdminOrderNotification(emailData)
+        .catch((err: unknown) => req.log.warn({ err }, 'admin order notification failed'));
 
       return reply.code(201).send(result);
     },

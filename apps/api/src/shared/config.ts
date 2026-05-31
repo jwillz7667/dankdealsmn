@@ -34,6 +34,16 @@ const EnvSchema = z.object({
 
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().default('DankDeals <orders@dankdealsmn.com>'),
+  // Public storefront origin — used to build absolute links + the logo URL in
+  // transactional emails (email clients can't resolve relative paths). Defaults
+  // to the production apex so emails are never broken by a localhost fallback.
+  WEB_PUBLIC_URL: z.string().url().default('https://dankdealsmn.com'),
+  // Internal recipients for the new-order notification. Comma-separated so the
+  // business can fan out to several inboxes; empty disables the notification.
+  ADMIN_NOTIFICATION_EMAIL: z
+    .string()
+    .default('')
+    .transform((s) => s.split(',').map((e) => e.trim()).filter(Boolean)),
 });
 
 export type AppConfig = z.infer<typeof EnvSchema>;
