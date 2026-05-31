@@ -187,6 +187,7 @@ export function ProductImageManager({ productId, initialImages }: ProductImageMa
                   type="button"
                   className="iconbtn-sm"
                   title="Move left"
+                  aria-label="Move image left"
                   onClick={() => move(index, -1)}
                   disabled={pending || index === 0}
                 >
@@ -196,6 +197,7 @@ export function ProductImageManager({ productId, initialImages }: ProductImageMa
                   type="button"
                   className="iconbtn-sm"
                   title="Move right"
+                  aria-label="Move image right"
                   onClick={() => move(index, 1)}
                   disabled={pending || index === images.length - 1}
                 >
@@ -205,6 +207,7 @@ export function ProductImageManager({ productId, initialImages }: ProductImageMa
                   type="button"
                   className="iconbtn-sm"
                   title={image.isPrimary ? 'Primary image' : 'Set as primary'}
+                  aria-label={image.isPrimary ? 'Primary image' : 'Set as primary'}
                   onClick={() => setPrimary(image.id)}
                   disabled={pending || image.isPrimary}
                   style={image.isPrimary ? { color: 'var(--green-700)', borderColor: 'var(--green)' } : undefined}
@@ -226,6 +229,7 @@ export function ProductImageManager({ productId, initialImages }: ProductImageMa
                       type="button"
                       className="iconbtn-sm"
                       title="Cancel"
+                      aria-label="Cancel delete"
                       onClick={() => setConfirmId(null)}
                     >
                       ✕
@@ -236,6 +240,7 @@ export function ProductImageManager({ productId, initialImages }: ProductImageMa
                     type="button"
                     className="iconbtn-sm"
                     title="Delete image"
+                    aria-label="Delete image"
                     onClick={() => setConfirmId(image.id)}
                     disabled={pending}
                   >

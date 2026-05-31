@@ -189,7 +189,7 @@ export interface Review {
   id: string;
   rating: number;
   title: string | null;
-  body: string | null;
+  body: string;
   authorName: string;
   createdAt: string;
 }
@@ -197,6 +197,8 @@ export interface Review {
 export interface ReviewList {
   items: Review[];
   total: number;
+  ratingAvg: number;
+  ratingCount: number;
 }
 
 // ---- request payloads ----

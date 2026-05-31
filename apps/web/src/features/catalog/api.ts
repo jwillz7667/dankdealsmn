@@ -91,6 +91,6 @@ export async function getProductReviews(slug: string): Promise<ReviewList> {
     });
   } catch (err) {
     console.error('getProductReviews failed', err);
-    return { items: [], total: 0 };
+    return { items: [], total: 0, ratingAvg: 0, ratingCount: 0 };
   }
 }
