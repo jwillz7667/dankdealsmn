@@ -11,7 +11,7 @@ export const STORE_CONFIG_FALLBACK: StoreConfig = {
   defaultTipBps: 1500,
   deliveryEtaMinutes: 45,
   licenseNumber: 'MN-CAN-0421',
-  supportPhone: '(612) 555-3265',
+  supportPhone: '(612) 930-1390',
   supportEmail: 'support@dankdealsmn.com',
   announcement: 'Free delivery on orders over $75 · Cash or debit on arrival',
   zones: [

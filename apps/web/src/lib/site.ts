@@ -8,7 +8,7 @@ export const SITE = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'https://dankdealsmn.com',
   locale: 'en_US',
   twitter: '@dankdealsmn',
-  supportPhone: '(612) 555-3265',
+  supportPhone: '(612) 930-1390',
   licenseNumber: 'MN-CAN-0421',
   serviceArea: 'Minneapolis–St. Paul, Minnesota',
   geo: { latitude: 44.9778, longitude: -93.265 },
